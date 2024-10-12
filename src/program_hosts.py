@@ -105,7 +105,7 @@ def register_cage():
     name = input('Give your cage a name: ').strip()
     # TODO: Save cage to DB.
 
-    cage = svc.register_cage(active_account ,name, meters, carpeted, has_toys, allow_dangerous,)
+    cage = svc.register_cage(state.active_account ,name, meters, carpeted, has_toys, allow_dangerous, price)
     state.reload_account()
     success_msg(f"Success: You've successfully registered the cage with id: {cage.id}")
 
@@ -113,17 +113,19 @@ def register_cage():
 
 
 def list_cages(supress_header=False):
+    if not supress_header:
+        print(' ******************     Your cages     **************** ')
+
+    # Require an account
     if not state.active_account:
         error_msg(f"you must login first to register a cage")
         return
 
-    if not supress_header:
-        print(' ******************     Your cages     **************** ')
-
-    # TODO: Require an account
     # TODO: Get cages, list details
-
-    print(" -------- NOT IMPLEMENTED -------- ")
+    cages = svc.get_cages_for_user(state.active_account)
+    print(f'You have {len(cages)} cages.')
+    for cage in cages:
+        print(f' * {cage.name} is {cage.square_meters} square meters.')
 
 
 def update_availability():
